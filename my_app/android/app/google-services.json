@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "683278690117",
+    "project_id": "mobile-hybrid-solution",
+    "storage_bucket": "mobile-hybrid-solution.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683278690117:android:60013260eab275f70f402c",
+        "android_client_info": {
+          "package_name": "com.example.my_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUUhIJE1uGxtIF9nf5AJ17xkl24IedvTA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
