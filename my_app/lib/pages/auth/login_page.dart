@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await _googleSignIn.signOut();
       final GoogleSignInAccount? account = await _googleSignIn.signIn();
-      if (account == null) return; // user cancelled
+      if (account == null) return; 
 
       final response = await _dio.post('${AppConfig.apiBase}/google-login',
           data: {'email': account.email, 'name': account.displayName});
@@ -102,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const SizedBox(height: 40),
 
-              Image.asset('assets/images/download.png', height: 150, width: 200),
+              Image.asset('assets/images/LogoWaresForDarkBg.png', height: 150, width: 200),
 
               const SizedBox(height: 40),
 
@@ -115,7 +115,6 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 32),
 
-              // Google button
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
@@ -136,7 +135,6 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 16),
 
-              // divider
               Row(children: [
                 const Expanded(child: Divider(color: Colors.grey)),
                 const Padding(
@@ -147,7 +145,6 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 16),
 
-              // email field
               TextField(
                 controller: _emailController,
                 style: const TextStyle(color: Colors.white),
@@ -165,7 +162,6 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 16),
 
-              // password field
               TextField(
                 controller: _passwordController,
                 obscureText: !_showPassword,
@@ -190,7 +186,6 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 24),
 
-              // login button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -211,27 +206,8 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 16),
 
-              // forgot password placeholder
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    side: const BorderSide(color: Colors.grey),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
-                  ),
-                  child: const Text('Forgot password?',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold)),
-                ),
-              ),
-
               const SizedBox(height: 32),
 
-              // sign up link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

@@ -1,6 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const baseUrl = `http://${process.env.HOST || 'localhost'}:${process.env.PORT || 3001}`;
+
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
+    },
+});
 
 router.post('/register', (req, res) => {
     const {user_name, email, password} = req.body;
@@ -37,7 +48,6 @@ router.post('/register', (req, res) => {
     });
 });
 
-//endpoint verify email
 router.get('/verify-email', (req, res) => {
     const { token } = req.query;
     if (!token) return res.status(400).send('Invalid link.');
@@ -53,7 +63,6 @@ router.get('/verify-email', (req, res) => {
     });
 });
 
-//endpoint login
 router.post('/login', (req, res) => {
     const {email, password} = req.body;
     const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -74,7 +83,6 @@ router.post('/login', (req, res) => {
     });
 });
 
-// endpoint google login
 router.post('/google-login', (req, res) => {
     const { email, name } = req.body;
     if (!email) return res.status(400).json({ message: '400 Bad Request' });

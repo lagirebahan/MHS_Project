@@ -6,7 +6,6 @@ const { verifyToken } = require('../middleware/auth');
 router.post('/', verifyToken, (req, res) => {
     const { order_ids, name, phone, address } = req.body;
 
-    // Validation
     if (!order_ids || !Array.isArray(order_ids) || order_ids.length === 0)
         return res.status(400).json({ message: '400 Bad Request: no items' });
     if (!name || !phone || !address)
@@ -15,13 +14,11 @@ router.post('/', verifyToken, (req, res) => {
     const userId = req.user.user_id;
     const placeholders = order_ids.map(() => '?').join(',');
 
-    // Start DB transaction
     db.beginTransaction(err => {
         if (err) return res.status(500).json({ message: '500 Server Error' });
 
         const rollback = (msg) => db.rollback(() => res.status(500).json({ message: msg }));
 
-        // 1. Fetch cart items
         db.query(
             `SELECT o.order_id, o.product_id, o.quantity, p.product_name, p.price, p.stock
              FROM orders o
@@ -35,7 +32,6 @@ router.post('/', verifyToken, (req, res) => {
                         res.status(404).json({ message: '404 Not Found: no matching cart items' })
                     );
 
-                // 2. Check stock
                 for (const item of items) {
                     if (item.quantity > item.stock) {
                         return db.rollback(() =>
@@ -46,12 +42,10 @@ router.post('/', verifyToken, (req, res) => {
                     }
                 }
 
-                // 3. Calculate total server-side (ignore client total_price)
                 const totalPrice = items.reduce(
                     (sum, i) => sum + parseFloat(i.price) * i.quantity, 0
                 ).toFixed(2);
 
-                // 4. Insert transaction
                 db.query(
                     'INSERT INTO transactions (user_id, recipient_name, phone, address, total_price) VALUES (?, ?, ?, ?, ?)',
                     [userId, name, phone, address, totalPrice],
@@ -60,7 +54,6 @@ router.post('/', verifyToken, (req, res) => {
 
                         const transactionId = result.insertId;
 
-                        // 5. Insert transaction_items
                         const itemValues = items.map(i => [
                             transactionId,
                             i.product_id,
@@ -74,7 +67,6 @@ router.post('/', verifyToken, (req, res) => {
                             (err) => {
                                 if (err) return rollback('500 Server Error');
 
-                                // 6. Decrement stock using a single query
                                 const stockCases = items
                                     .map(() => 'WHEN product_id = ? THEN stock - ?')
                                     .join(' ');
@@ -90,14 +82,12 @@ router.post('/', verifyToken, (req, res) => {
                                     (err) => {
                                         if (err) return rollback('500 Server Error');
 
-                                        // 7. Delete from cart
                                         db.query(
                                             `DELETE FROM orders WHERE order_id IN (${placeholders}) AND user_id = ?`,
                                             [...order_ids, userId],
                                             (err) => {
                                                 if (err) return rollback('500 Server Error');
 
-                                                // 8. Commit
                                                 db.commit(err => {
                                                     if (err) return rollback('500 Server Error');
                                                     res.status(200).json({

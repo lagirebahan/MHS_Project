@@ -179,7 +179,6 @@ class _AdminPageState extends State<AdminPage> {
               child: CircularProgressIndicator(color: theme.accentColor))
           : Column(
               children: [
-                // Search bar
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                   child: TextField(
@@ -218,7 +217,6 @@ class _AdminPageState extends State<AdminPage> {
                   ),
                 ),
 
-                // Category filter chips
                 SizedBox(
                   height: 40,
                   child: ListView.separated(
@@ -266,7 +264,6 @@ class _AdminPageState extends State<AdminPage> {
 
                 const SizedBox(height: 8),
 
-                // Item count
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Align(
@@ -281,7 +278,6 @@ class _AdminPageState extends State<AdminPage> {
 
                 const SizedBox(height: 8),
 
-                // Product list
                 Expanded(
                   child: _filtered.isEmpty
                       ? Center(
@@ -415,8 +411,6 @@ class _AdminPageState extends State<AdminPage> {
   }
 }
 
-// ─── Product Form Bottom Sheet ─────────────────────────────────────────────────
-
 class _ProductForm extends StatefulWidget {
   final dynamic product;
   final String apiBase;
@@ -522,9 +516,6 @@ class _ProductFormState extends State<_ProductForm> {
         });
 
         if (_isEdit) {
-          // print('isEdit: $_isEdit');
-          // print('pickedImage: $_pickedImage');
-          // print('product_id: ${widget.product['product_id']}');
           await _dio.patch(
             '${widget.apiBase}/products/${widget.product['product_id']}',
             data: formData,
@@ -570,7 +561,6 @@ class _ProductFormState extends State<_ProductForm> {
           ),
           child: Column(
             children: [
-              // Handle
               Container(
                 margin: const EdgeInsets.only(top: 12, bottom: 8),
                 width: 36,
@@ -608,7 +598,6 @@ class _ProductFormState extends State<_ProductForm> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Image picker
                       GestureDetector(
                         onTap: _pickImage,
                         child: Container(
@@ -683,7 +672,6 @@ class _ProductFormState extends State<_ProductForm> {
 
                       const SizedBox(height: 20),
 
-                      // Type dropdown
                       _label('Type', required: true),
                       const SizedBox(height: 8),
                       Container(
@@ -756,7 +744,6 @@ class _ProductFormState extends State<_ProductForm> {
 
                       const SizedBox(height: 28),
 
-                      // Save button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(

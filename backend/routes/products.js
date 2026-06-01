@@ -5,6 +5,16 @@ const path = require('path');
 const fs = require('fs');
 const { verifyToken, verifyAdmin } = require('../middleware/auth');
 
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, 'uploads/'),
+    filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
+});
+const upload = multer({ storage });
+
+const baseUrl = `http://${process.env.HOST || 'localhost'}:${process.env.PORT || 3001}`;
+
 router.get('/', verifyToken, (req, res) => {
     db.query('SELECT * FROM products', (err, results) => {
         if (err) return res.status(500).json({ message: '500 Server Error' });
@@ -41,7 +51,7 @@ router.patch('/:product_id', verifyToken, verifyAdmin, upload.single('image'), (
             const oldUrl = results[0].image;
             if (oldUrl) {
                 const oldFilename = oldUrl.split('/uploads/')[1];
-                const oldPath = path.join(__dirname, 'uploads', oldFilename);
+                const oldPath = path.join(__dirname, '..', 'uploads', oldFilename);
                 if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
             }
  
@@ -71,7 +81,7 @@ router.delete('/:product_id', verifyToken, verifyAdmin, (req, res) => {
         const oldUrl = results[0].image;
         if (oldUrl) {
             const oldFilename = oldUrl.split('/uploads/')[1];
-            const oldPath = path.join(__dirname, 'uploads', oldFilename);
+            const oldPath = path.join(__dirname, '..', 'uploads', oldFilename);
             if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
         }
  

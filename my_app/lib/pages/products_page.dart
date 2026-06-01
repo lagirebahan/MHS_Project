@@ -102,7 +102,7 @@ class _ProductsPageState extends State<ProductsPage> {
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
           child: TextField(
             controller: _searchController,
-            style: TextStyle(color: theme.primaryTextColor),
+            style: theme.baseTextStyle(theme.primaryTextColor),
             decoration: InputDecoration(
               hintText: 'Search equipment...',
               hintStyle: TextStyle(color: Colors.grey[600]),
@@ -135,7 +135,6 @@ class _ProductsPageState extends State<ProductsPage> {
           ),
         ),
 
-        // Category filter chips
         SizedBox(
           height: 40,
           child: ListView.separated(
@@ -160,8 +159,8 @@ class _ProductsPageState extends State<ProductsPage> {
                   ),
                   child: Text(
                     cat,
-                    style: TextStyle(
-                      color: selected ? theme.primaryTextColor : Colors.grey[600],
+                    style: theme.baseTextStyle(
+                      selected ? theme.primaryTextColor : Colors.grey[600]!,).copyWith(
                       fontSize: 12,
                       fontWeight: selected ? FontWeight.bold : FontWeight.normal,
                     ),
@@ -174,7 +173,6 @@ class _ProductsPageState extends State<ProductsPage> {
 
         const SizedBox(height: 12),
 
-        // Results count
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Align(
@@ -188,7 +186,6 @@ class _ProductsPageState extends State<ProductsPage> {
 
         const SizedBox(height: 8),
 
-        // Grid
         Expanded(
           child: _loading
               ? Center(

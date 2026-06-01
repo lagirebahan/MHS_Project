@@ -27,7 +27,6 @@ router.get('/profile', verifyToken, (req, res) => {
         (err, txResults) => {
           if (err) return res.status(500).json({ message: '500 Server Error' });
 
-          // Group items under their transaction
           const txMap = {};
           for (const row of txResults) {
             const id = row.transaction_id;
@@ -35,7 +34,7 @@ router.get('/profile', verifyToken, (req, res) => {
               txMap[id] = {
                 transaction_id: id,
                 total_price: row.total_price,
-                status: row.status,          // 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
+                status: row.status,         
                 created_at: row.created_at,
                 items: [],
               };
@@ -61,7 +60,6 @@ router.get('/profile', verifyToken, (req, res) => {
   );
 });
  
-//Profile page
 router.get('/history', verifyToken, (req, res) => {
     const user_id  = req.user.user_id;
     

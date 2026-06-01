@@ -76,14 +76,14 @@ class _MainScaffoldState extends State<MainScaffold> {
         return AlertDialog(
           backgroundColor: theme.surfaceBg,
           title: Text('Confirm Logout',
-              style: TextStyle(color: theme.primaryTextColor)),
+              style: theme.baseTextStyle(theme.primaryTextColor)),
           content: Text('Are you sure you want to logout?',
-              style: TextStyle(color: Colors.grey[500])),
+              style: theme.baseTextStyle(Colors.grey[500]!)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text('Cancel',
-                  style: TextStyle(color: Colors.grey[500])),
+                  style: theme.baseTextStyle(Colors.grey[500]!)),
             ),
             TextButton(
               onPressed: () async {
@@ -93,8 +93,8 @@ class _MainScaffoldState extends State<MainScaffold> {
                   Navigator.pushReplacementNamed(context, '/login');
                 }
               },
-              child: const Text('Logout',
-                  style: TextStyle(color: Colors.redAccent)),
+              child: Text('Logout',
+                  style: theme.baseTextStyle(Colors.redAccent)),
             ),
           ],
         );
@@ -111,7 +111,7 @@ class _MainScaffoldState extends State<MainScaffold> {
         backgroundColor:theme.baseBg,
         elevation: 0,
         centerTitle: true,
-        title: Image.asset('assets/images/download.png', height: 28),
+        title: Image.asset('assets/images/LogoWaresForDarkBg.png', height: 28),
         iconTheme: IconThemeData(color: theme.primaryTextColor),
         actions: [
           if (_currentIndex == 2)
@@ -127,7 +127,6 @@ class _MainScaffoldState extends State<MainScaffold> {
         backgroundColor: theme.baseBg,
         child: Column(
           children: [
-            // Drawer header
             Container(
               width: double.infinity,
               padding: const EdgeInsets.fromLTRB(20, 60, 20, 24),
@@ -145,8 +144,8 @@ class _MainScaffoldState extends State<MainScaffold> {
                     backgroundColor: theme.borderColor,
                     child: Text(
                       _userName.isNotEmpty ? _userName[0].toUpperCase() : 'U',
-                      style: TextStyle(
-                          color: theme.primaryTextColor,
+                      style: theme.baseTextStyle(
+                          theme.primaryTextColor,).copyWith(
                           fontSize: 24,
                           fontWeight: FontWeight.bold),
                     ),
@@ -182,7 +181,6 @@ class _MainScaffoldState extends State<MainScaffold> {
               ),
             ),
 
-            // Menu items
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: 8),
@@ -249,11 +247,10 @@ class _MainScaffoldState extends State<MainScaffold> {
               ),
             ),
 
-            // App version at bottom
             Padding(
               padding: const EdgeInsets.all(16),
               child: Text('Wuthering Wares v1.0',
-                  style: TextStyle(color: Colors.grey[700], fontSize: 11)),
+                  style: theme.baseTextStyle( Colors.grey[700]!,).copyWith( fontSize: 11)),
             ),
           ],
         ),
@@ -273,9 +270,8 @@ class _MainScaffoldState extends State<MainScaffold> {
           backgroundColor: theme.baseBg,
           selectedItemColor: theme.accentColor,
           unselectedItemColor: Colors.grey[600],
-          selectedLabelStyle: const TextStyle(
-              fontSize: 11, fontWeight: FontWeight.w600),
-          unselectedLabelStyle: const TextStyle(fontSize: 11),
+          selectedLabelStyle: theme.baseTextStyle(theme.accentColor).copyWith(fontSize:11, fontWeight: FontWeight.w600),
+          unselectedLabelStyle: theme.baseTextStyle(Colors.grey[600]!).copyWith(fontSize: 11),
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
@@ -309,8 +305,8 @@ class _MainScaffoldState extends State<MainScaffold> {
     return ListTile(
       leading: Icon(icon, color: c, size: 22),
       title: Text(label,
-          style: TextStyle(
-              color: c, fontSize: 15, fontWeight: FontWeight.w500)),
+          style: theme.baseTextStyle(
+               c,).copyWith(fontSize: 15, fontWeight: FontWeight.w500)),
       onTap: onTap,
       horizontalTitleGap: 8,
     );

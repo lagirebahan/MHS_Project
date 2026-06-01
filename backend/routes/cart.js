@@ -3,7 +3,6 @@ const router = express.Router();
 const db = require('../db');
 const { verifyToken } = require('../middleware/auth');
 
-// GET cart
 router.get('/', verifyToken, (req, res) => {
     const sql = `
         SELECT o.order_id, o.quantity, o.created_at,
@@ -19,7 +18,6 @@ router.get('/', verifyToken, (req, res) => {
     });
 });
  
-// POST add to cart
 router.post('/', verifyToken, (req, res) => {
     const { product_id, quantity = 1 } = req.body;
     if (!product_id) return res.status(400).json({ message: '400 Bad Request' });
@@ -54,7 +52,6 @@ router.post('/', verifyToken, (req, res) => {
     );
 });
  
-// PATCH update cart quantity
 router.patch('/:order_id', verifyToken, (req, res) => {
     const { quantity } = req.body;
     const { order_id } = req.params;

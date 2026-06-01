@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_app/config.dart';
 
-
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -100,7 +99,7 @@ class _RegisterPageState extends State<RegisterPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Image.asset('assets/images/download.png', height: 30),
+        title: Image.asset('assets/images/LogoWaresForDarkBg.png', height: 30),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -119,7 +118,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
               const SizedBox(height: 32),
 
-              // Google button
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
@@ -140,7 +138,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
               const SizedBox(height: 16),
 
-              // divider
               Row(children: const [
                 Expanded(child: Divider(color: Colors.grey)),
                 Padding(
@@ -151,7 +148,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
               const SizedBox(height: 16),
 
-              // username field
               TextField(
                 controller: _usernameController,
                 style: const TextStyle(color: Colors.white),
@@ -169,7 +165,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
               const SizedBox(height: 16),
 
-              // email field
               TextField(
                 controller: _emailController,
                 style: const TextStyle(color: Colors.white),
@@ -188,7 +183,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
               const SizedBox(height: 16),
 
-              // password field
               TextField(
                 controller: _passwordController,
                 obscureText: !_showPassword,
@@ -213,7 +207,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
               const SizedBox(height: 24),
 
-              // register button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -234,7 +227,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
               const SizedBox(height: 32),
 
-              // sign in link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

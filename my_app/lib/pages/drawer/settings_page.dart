@@ -5,7 +5,6 @@ import 'package:my_app/theme/app_theme.dart';
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
-  // Available font families (must be declared in pubspec.yaml or use Google Fonts)
   static const List<String> _fontFamilies = [
     'Default',
     'Courier New',
@@ -13,7 +12,6 @@ class SettingsPage extends StatelessWidget {
     'Trebuchet MS',
   ];
 
-  // Accent color presets
   static const List<Map<String, dynamic>> _accentPresets = [
     {'label': 'Cyan', 'color': Colors.cyanAccent},
     {'label': 'Teal', 'color': Color(0xFF00FFB3)},
@@ -25,7 +23,6 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // SettingsPage is stateless — reads AppTheme from Provider
     final theme = context.watch<AppTheme>();
 
     return Scaffold(
@@ -62,11 +59,9 @@ class SettingsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Preview card ───────────────────────────
             _buildPreviewCard(theme),
             const SizedBox(height: 28),
 
-            // ── Font Size ──────────────────────────────
             _buildSection(
               theme: theme,
               title: 'Font Size',
@@ -75,7 +70,6 @@ class SettingsPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // ── Font Family ────────────────────────────
             _buildSection(
               theme: theme,
               title: 'Font Family',
@@ -84,7 +78,6 @@ class SettingsPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // ── Accent Color ───────────────────────────
             _buildSection(
               theme: theme,
               title: 'Accent Color',
@@ -93,7 +86,6 @@ class SettingsPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // ── Background Brightness ──────────────────
             _buildSection(
               theme: theme,
               title: 'Background Brightness',
@@ -106,7 +98,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  // ── Preview Card ─────────────────────────────────────────────────────────
   Widget _buildPreviewCard(AppTheme theme) {
     return Container(
       width: double.infinity,
@@ -195,7 +186,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  // ── Section Wrapper ───────────────────────────────────────────────────────
   Widget _buildSection({
     required AppTheme theme,
     required String title,
@@ -233,7 +223,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  // ── Font Size Control ─────────────────────────────────────────────────────
   Widget _buildFontSizeControl(AppTheme theme, BuildContext context) {
     return Column(
       children: [
@@ -272,7 +261,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  // ── Font Family Control ───────────────────────────────────────────────────
   Widget _buildFontFamilyControl(AppTheme theme, BuildContext context) {
     return Wrap(
       spacing: 8,
@@ -310,7 +298,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  // ── Accent Color Control ──────────────────────────────────────────────────
   Widget _buildAccentColorControl(AppTheme theme, BuildContext context) {
     return Wrap(
       spacing: 12,
@@ -348,7 +335,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  // ── Background Brightness Control ─────────────────────────────────────────
   Widget _buildBrightnessControl(AppTheme theme, BuildContext context) {
     final modes = [
       (BgMode.dark,  Icons.nightlight_round,  'Dark',  'Default dark theme'),

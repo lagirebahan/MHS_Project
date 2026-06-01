@@ -19,6 +19,7 @@ class _CartPageState extends State<CartPage> {
   Set<int> _selectedIds = {};
   bool _loading = true;
   bool _selectAll = false;
+  final theme = AppTheme();
 
   @override
   void initState() {
@@ -74,7 +75,7 @@ class _CartPageState extends State<CartPage> {
         if (idx != -1) _cartItems[idx]['quantity'] = quantity;
       });
     } catch (e) {
-      // silently fail, could show snackbar
+      // quantity update failed
     }
   }
 
@@ -164,9 +165,7 @@ class _CartPageState extends State<CartPage> {
                       onRefresh: _fetchCart,
                       child: Column(
                         children: [
-                          // Select all bar
                           _selectAllBar(theme),
-                          // Reorderable list
                           Expanded(
                             child: ReorderableListView.builder(
                             padding: const EdgeInsets.only(bottom: 8),
@@ -201,7 +200,6 @@ class _CartPageState extends State<CartPage> {
                     ),
         ),
 
-        // Bottom checkout bar
         if (!_loading && _cartItems.isNotEmpty) _checkoutBar(theme),
       ],
     );
@@ -222,7 +220,7 @@ class _CartPageState extends State<CartPage> {
                   fontWeight: FontWeight.w500)),
           const SizedBox(height: 8),
           Text('Add items from the Products page',
-              style: TextStyle(color: Colors.grey[700], fontSize: 13)),
+              style: theme.baseTextStyle(Colors.grey[700]!,).copyWith(fontSize: 13)),
         ],
       ),
     );
@@ -245,14 +243,14 @@ class _CartPageState extends State<CartPage> {
             side: const BorderSide(color: Colors.grey),
           ),
           Text('Select All',
-              style: TextStyle(color: theme.primaryTextColor, fontSize: 14)),
+              style: theme.baseTextStyle(theme.primaryTextColor,).copyWith(fontSize: 14)),
           const Spacer(),
           if (_selectedIds.isNotEmpty)
             GestureDetector(
               onTap: _removeSelected,
-              child: const Text('Delete',
-                  style: TextStyle(
-                      color: Colors.redAccent,
+              child: Text('Delete',
+                  style: theme.baseTextStyle(
+                      Colors.redAccent,).copyWith(
                       fontSize: 13,
                       fontWeight: FontWeight.w500)),
             ),
@@ -282,7 +280,6 @@ class _CartPageState extends State<CartPage> {
       ),
       child: Row(
         children: [
-          // Drag handle (three lines)
           ReorderableDragStartListener(
             index: index,
             child: Container(
@@ -305,7 +302,6 @@ class _CartPageState extends State<CartPage> {
             ),
           ),
 
-          // Checkbox
           Checkbox(
             value: isSelected,
             onChanged: (_) => _toggleSelect(orderId),
@@ -314,7 +310,6 @@ class _CartPageState extends State<CartPage> {
             side: const BorderSide(color: Colors.grey),
           ),
 
-          // Product image
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: SizedBox(
@@ -338,7 +333,6 @@ class _CartPageState extends State<CartPage> {
 
           const SizedBox(width: 12),
 
-          // Product info + quantity
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -346,26 +340,25 @@ class _CartPageState extends State<CartPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(type,
-                      style: TextStyle(
-                          color: theme.accentColor,
+                      style: theme.baseTextStyle(
+                          theme.accentColor,).copyWith(
                           fontSize: 10,
                           fontWeight: FontWeight.w600)),
                   const SizedBox(height: 2),
                   Text(name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: theme.primaryTextColor,
+                      style: theme.baseTextStyle(
+                          theme.primaryTextColor,).copyWith(
                           fontSize: 13,
                           fontWeight: FontWeight.w500)),
                   const SizedBox(height: 6),
                   Text('Rp ${_formatPrice(price)}',
-                      style: TextStyle(
-                          color: theme.primaryTextColor,
+                      style: theme.baseTextStyle(
+                          theme.primaryTextColor,).copyWith(
                           fontSize: 13,
                           fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
-                  // Quantity controls
                   Row(
                     children: [
                       _qtyButton(
@@ -377,8 +370,8 @@ class _CartPageState extends State<CartPage> {
                         width: 36,
                         alignment: Alignment.center,
                         child: Text('$quantity',
-                            style: TextStyle(
-                                color: theme.primaryTextColor,
+                            style: theme.baseTextStyle(
+                                theme.primaryTextColor,).copyWith(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold)),
                       ),
@@ -393,8 +386,8 @@ class _CartPageState extends State<CartPage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: Text('Max',
-                              style: TextStyle(
-                                  color: Colors.orange[400], fontSize: 11)),
+                              style: theme.baseTextStyle(
+                                  Colors.orange[400]!,).copyWith(fontSize: 11)),
                         ),
                     ],
                   ),
@@ -446,13 +439,13 @@ class _CartPageState extends State<CartPage> {
               children: [
                 Text(
                   'Total ($count item${count != 1 ? 's' : ''})',
-                  style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                  style: theme.baseTextStyle(Colors.grey[500]!,).copyWith(fontSize: 12),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   'Rp ${_formatPrice(_totalPrice)}',
-                  style: TextStyle(
-                      color: theme.primaryTextColor,
+                  style: theme.baseTextStyle(
+                      theme.primaryTextColor,).copyWith(
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
                 ),
@@ -480,8 +473,8 @@ class _CartPageState extends State<CartPage> {
             ),
             child: Text(
               'Checkout ($count)',
-              style: TextStyle(
-                  color: count > 0 ? theme.baseBg : Colors.grey,
+              style: theme.baseTextStyle(
+                  count > 0 ? theme.baseBg : Colors.grey,).copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 14),
             ),

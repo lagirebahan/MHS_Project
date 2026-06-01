@@ -109,8 +109,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
       appBar: AppBar(
         backgroundColor: theme.surfaceBg,
         foregroundColor: theme.primaryTextColor,
-        title: const Text('Checkout',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('Checkout',
+            style: theme.baseTextStyle(theme.primaryTextColor).copyWith(fontWeight: FontWeight.bold)),
         elevation: 0,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
@@ -122,7 +122,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // --- Order Summary ---
             _sectionHeader('Order Summary', Icons.receipt_long_outlined, theme),
             const SizedBox(height: 8),
             Container(
@@ -139,7 +138,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     final isLast = i == widget.selectedItems.length - 1;
                     return _orderItem(item, isLast, theme);
                   }),
-                  // Total row
                   Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12),
@@ -155,13 +153,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       children: [
                         Text(
                           'Total (${widget.selectedItems.length} item${widget.selectedItems.length != 1 ? 's' : ''})',
-                          style: const TextStyle(
-                              color: Colors.grey, fontSize: 13),
+                          style: theme.baseTextStyle(
+                              Colors.grey,).copyWith(fontSize: 13),
                         ),
                         Text(
                           'Rp ${_formatPrice(_totalPrice)}',
-                          style: TextStyle(
-                            color: theme.accentColor,
+                          style: theme.baseTextStyle(
+                            theme.accentColor,).copyWith(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -175,7 +173,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
             const SizedBox(height: 24),
 
-            // --- Delivery Details ---
             _sectionHeader('Delivery Details', Icons.local_shipping_outlined, theme),
             const SizedBox(height: 8),
             Container(
@@ -226,7 +223,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
             const SizedBox(height: 24),
 
-            // --- Payment Method (display only) ---
             _sectionHeader('Payment Method', Icons.payments_outlined, theme),
             const SizedBox(height: 8),
             Container(
@@ -253,13 +249,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Cash on Delivery',
-                          style: TextStyle(
-                              color: theme.primaryTextColor,
+                          style: theme.baseTextStyle(
+                              theme.primaryTextColor,).copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 14)),
                       Text('Pay when your order arrives',
                           style:
-                              TextStyle(color: Colors.grey, fontSize: 12)),
+                              theme.baseTextStyle(Colors.grey,).copyWith(fontSize: 12)),
                     ],
                   ),
                   const Spacer(),
@@ -271,7 +267,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
             const SizedBox(height: 32),
 
-            // --- Place Order Button ---
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -289,10 +284,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         width: 20,
                         child: CircularProgressIndicator(
                             strokeWidth: 2, color: Colors.black))
-                    : const Text(
+                    : Text(
                         'Place Order',
-                        style: TextStyle(
-                            color: Colors.black,
+                        style: theme.baseTextStyle(
+                            Colors.black,).copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 16),
                       ),
@@ -312,8 +307,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
         Icon(icon, color: theme.accentColor, size: 18),
         const SizedBox(width: 8),
         Text(title,
-            style: TextStyle(
-                color: theme.primaryTextColor,
+            style: theme.baseTextStyle(
+                theme.primaryTextColor,).copyWith(
                 fontSize: 15,
                 fontWeight: FontWeight.bold)),
       ],
@@ -364,22 +359,22 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 Text(name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: theme.primaryTextColor,
+                    style: theme.baseTextStyle(
+                        theme.primaryTextColor,).copyWith(
                         fontSize: 13,
                         fontWeight: FontWeight.w500)),
                 const SizedBox(height: 4),
                 Text('Qty: $qty',
                     style:
-                        const TextStyle(color: Colors.grey, fontSize: 12)),
+                        theme.baseTextStyle(Colors.grey,).copyWith(fontSize: 12)),
               ],
             ),
           ),
           const SizedBox(width: 8),
           Text(
             'Rp ${_formatPrice(subtotal)}',
-            style: TextStyle(
-                color: theme.primaryTextColor,
+            style: theme.baseTextStyle(
+                theme.primaryTextColor,).copyWith(
                 fontSize: 13,
                 fontWeight: FontWeight.bold),
           ),
@@ -400,15 +395,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }) {
     return TextFormField(
       controller: controller,
-      style: TextStyle(color: theme.primaryTextColor),
+      style: theme.baseTextStyle(theme.primaryTextColor),
       keyboardType: keyboardType,
       maxLines: maxLines,
       validator: validator,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.grey),
+        labelStyle: theme.baseTextStyle(Colors.grey),
         hintText: hint,
-        hintStyle: const TextStyle(color: Color(0xFF3A3A5A)),
+        hintStyle: theme.baseTextStyle(Color(0xFF3A3A5A)),
         prefixIcon: Icon(icon, color: Colors.grey, size: 20),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -432,8 +427,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 }
-
-// ─── SUCCESS PAGE ─────────────────────────────────────────────────────────────
 
 class _OrderSuccessPage extends StatelessWidget {
   final List<dynamic> items;
@@ -462,7 +455,6 @@ class _OrderSuccessPage extends StatelessWidget {
             children: [
               const Spacer(),
 
-              // Success icon
               Container(
                 width: 100,
                 height: 100,
@@ -480,22 +472,21 @@ class _OrderSuccessPage extends StatelessWidget {
               const SizedBox(height: 24),
 
               Text('Order Placed!',
-                  style: TextStyle(
-                      color: theme.primaryTextColor,
+                  style: theme.baseTextStyle(
+                      theme.primaryTextColor,).copyWith(
                       fontSize: 26,
                       fontWeight: FontWeight.bold)),
 
               const SizedBox(height: 8),
 
-              const Text(
+              Text(
                 'Your order is being processed.\nWe\'ll deliver it to you soon.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey, fontSize: 14, height: 1.5),
+                style: theme.baseTextStyle(Colors.grey,).copyWith(fontSize: 14, height: 1.5),
               ),
 
               const SizedBox(height: 32),
 
-              // Order details card
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
@@ -521,13 +512,13 @@ class _OrderSuccessPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Total',
-                            style: TextStyle(
-                                color: Colors.grey[500],
+                            style: theme.baseTextStyle(
+                                Colors.grey[500]!,).copyWith(
                                 fontWeight: FontWeight.w500)),
                         Text(
                           'Rp ${formatPrice(totalPrice)}',
-                          style: TextStyle(
-                              color: theme.accentColor,
+                          style: theme.baseTextStyle(
+                              theme.accentColor,).copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 16),
                         ),
@@ -538,9 +529,9 @@ class _OrderSuccessPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Payment',
-                            style: TextStyle(color: Colors.grey[500])),
+                            style: theme.baseTextStyle(Colors.grey[500]!)),
                         Text('Cash on Delivery',
-                            style: TextStyle(color: theme.primaryTextColor)),
+                            style: theme.baseTextStyle(theme.primaryTextColor)),
                       ],
                     ),
                   ],
@@ -548,8 +539,6 @@ class _OrderSuccessPage extends StatelessWidget {
               ),
 
               const Spacer(),
-
-              // Back to home button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -562,9 +551,9 @@ class _OrderSuccessPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('Back to Home',
-                      style: TextStyle(
-                          color: Colors.black,
+                  child: Text('Back to Home',
+                      style: theme.baseTextStyle(
+                          Colors.black,).copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: 16)),
                 ),
@@ -583,14 +572,14 @@ class _OrderSuccessPage extends StatelessWidget {
         SizedBox(
           width: 80,
           child: Text(label,
-              style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+              style: theme.baseTextStyle(Colors.grey[500]!,).copyWith(fontSize: 13)),
         ),
         Text(' : ',
-            style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+            style: theme.baseTextStyle(Colors.grey[500]!,).copyWith(fontSize: 13)),
         Expanded(
           child: Text(value,
               style:
-                  TextStyle(color: theme.primaryTextColor, fontSize: 13)),
+                  theme.baseTextStyle(theme.primaryTextColor,).copyWith(fontSize: 13)),
         ),
       ],
     );

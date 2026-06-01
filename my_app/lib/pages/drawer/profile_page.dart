@@ -159,7 +159,6 @@ class _ProfilePageState extends State<ProfilePage>
       ),
       child: Row(
         children: [
-          // Avatar
           Container(
             width: 72,
             height: 72,
@@ -188,7 +187,6 @@ class _ProfilePageState extends State<ProfilePage>
             ),
           ),
           const SizedBox(width: 20),
-          // Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,10 +306,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildTransactionCard(Map<String, dynamic> tx, AppTheme theme) {
-    // final isCompleted = tx['status'] == 'Completed';
-    // final statusColor = isCompleted ? Colors.greenAccent : Colors.orangeAccent;
-    
+  Widget _buildTransactionCard(Map<String, dynamic> tx, AppTheme theme) {  
     final itemNames = (tx['item_names'] as String? ?? '').split('||');
     final itemQtys = (tx['item_quantities'] as String? ?? '').split('||');
     final itemList = List.generate(
@@ -348,23 +343,6 @@ class _ProfilePageState extends State<ProfilePage>
                   letterSpacing: 0.5,
                 ),
               ),
-              // Container(
-              //   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              //   decoration: BoxDecoration(
-              //     color: statusColor.withValues(alpha: 0.1),
-              //     borderRadius: BorderRadius.circular(20),
-              //     border: Border.all(color: statusColor.withValues(alpha: 0.4)),
-              //   ),
-              //   child: Text(
-              //     tx['status'],
-              //     style: TextStyle(
-              //       color: statusColor,
-              //       fontSize: 10,
-              //       fontWeight: FontWeight.w700,
-              //       letterSpacing: 0.5,
-              //     ),
-              //   ),
-              // ),
             ],
           ),
           const SizedBox(height: 8),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'dart:async';
 import 'package:my_app/config.dart';
 import 'package:my_app/pages/product_detail_page.dart';
 import 'package:my_app/widgets/product_card.dart';
@@ -23,19 +24,28 @@ class _HomePageState extends State<HomePage> {
   bool _loading = true;
   String _userName = 'Resonator';
 
+  final PageController _bannerController = PageController();
+  int _currentBanner = 0;
+  Timer? _bannerTimer;
+
   @override
   void initState() {
     super.initState();
-    _loadUserAndFetch(); // one method instead of two
+    _loadUserAndFetch();
+    _bannerTimer = Timer.periodic(const Duration(seconds: 10), (_) {
+      final next = (_currentBanner + 1) % 3;
+      _bannerController.animateToPage(
+        next,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+      setState(() => _currentBanner = next);
+    });
   }
 
   Future<void> _loadUserAndFetch() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
-    
-    // print('=== DEBUG ===');
-    // print('Token: $token');
-    // print('Username: ${prefs.getString('user_name')}');
     
     if (mounted) {
       setState(() {
@@ -48,8 +58,6 @@ class _HomePageState extends State<HomePage> {
         '${AppConfig.apiBase}/products',
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
-      // print('Status: ${response.statusCode}');
-      // print('Data: ${response.data}');
       if (mounted) {
         setState(() {
           _featured = (response.data as List).take(4).toList();
@@ -57,7 +65,6 @@ class _HomePageState extends State<HomePage> {
         });
       }
     } catch (e) {
-      // print('ERROR: $e');
       if (mounted) setState(() => _loading = false);
     }
   }
@@ -65,7 +72,86 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     _dio.close();
+    _bannerTimer?.cancel();
+    _bannerController.dispose();
     super.dispose();
+  }
+
+  Widget _buildBanner({
+    required String title,
+    required String subtitle,
+    required List<Color> colors,
+  }) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          colors: colors,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: -20, top: -20,
+            child: Container(
+              width: 120, height: 120,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.05),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 30, bottom: -30,
+            child: Container(
+              width: 100, height: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.05),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(title,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold)),
+                const SizedBox(height: 6),
+                Text(subtitle,
+                    style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.7),
+                        fontSize: 12)),
+                const SizedBox(height: 16),
+                GestureDetector(
+                  onTap: widget.onSeeAll,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text('Shop Now',
+                        style: TextStyle(
+                            color: colors[0],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -81,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Welcome back,',
-                      style: TextStyle(color: theme.primaryTextColor, fontSize: 13)),
+                      style: theme.baseTextStyle(theme.primaryTextColor).copyWith(fontSize: 13)),
                   Text(_userName,
                       style: theme.baseTextStyle(theme.primaryTextColor).copyWith(
                         fontSize: 22,
@@ -93,113 +179,56 @@ class _HomePageState extends State<HomePage> {
 
             const SizedBox(height: 20),
 
-            // Banner
+            const SizedBox(height: 20),
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                width: double.infinity,
-                height: 160,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF0A3D62), Color(0xFF00B4D8)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 160,
+                    child: PageView(
+                      controller: _bannerController,
+                      onPageChanged: (i) => setState(() => _currentBanner = i),
+                      children: [
+                        _buildBanner(
+                          title: 'Resonator Equipment',
+                          subtitle: 'Gear up for the next expedition',
+                          colors: [Color(0xFF0A3D62), Color(0xFF00B4D8)],
+                        ),
+                        _buildBanner(
+                          title: 'Terminal Supplies',
+                          subtitle: 'Stock up before you deploy',
+                          colors: [Color(0xFF1B4332), Color(0xFF52B788)],
+                        ),
+                        _buildBanner(
+                          title: 'Limited Stock',
+                          subtitle: 'Rare gear available now',
+                          colors: [Color(0xFF6A0572), Color(0xFFE040FB)],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                child: Stack(
-                  children: [
-                    // Decorative circles
-                    Positioned(
-                      right: -20,
-                      top: -20,
-                      child: Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withValues(alpha: 0.05),
-                        ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(3, (i) => AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: _currentBanner == i ? 20 : 6,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        color: _currentBanner == i ? theme.accentColor : Colors.grey[600],
+                        borderRadius: BorderRadius.circular(3),
                       ),
-                    ),
-                    Positioned(
-                      right: 30,
-                      bottom: -30,
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withValues(alpha: 0.05),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Resonator Equipment',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 6),
-                          Text('Gear up for the next expedition',
-                              style: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.7),
-                                  fontSize: 12)),
-                          const SizedBox(height: 16),
-                          GestureDetector(
-                            onTap: widget.onSeeAll,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: const Text('Shop Now',
-                                  style: TextStyle(
-                                      color: Color(0xFF0A3D62),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12)),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                    )),
+                  ),
+                ],
               ),
             ),
 
             const SizedBox(height: 28),
 
-            // SizedBox(
-            //   height: 90, // enough for icon + label at larger font sizes
-            //   child: SingleChildScrollView(
-            //     scrollDirection: Axis.horizontal,
-            //     padding: const EdgeInsets.symmetric(horizontal: 20),
-            //     child: Row(
-
-            //       children: [
-            //         _categoryChip(Icons.flash_on, 'Weapons', theme),
-            //         const SizedBox(width: 12),
-            //         _categoryChip(Icons.graphic_eq, 'Echoes', theme),
-            //         const SizedBox(width: 12),
-            //         _categoryChip(Icons.precision_manufacturing_outlined, 'Materials', theme),
-            //         const SizedBox(width: 12),
-            //         _categoryChip(Icons.medication_outlined, 'Consumables', theme),
-            //         const SizedBox(width: 12),
-            //         _categoryChip(Icons.auto_awesome, 'Special', theme),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-
-            // Categories row
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -216,7 +245,6 @@ class _HomePageState extends State<HomePage> {
 
             const SizedBox(height: 28),
 
-            // Featured section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -276,7 +304,6 @@ class _HomePageState extends State<HomePage> {
                                 builder: (_) => ProductDetailPage(product: _featured[index]),
                               ),
                             ),
-                            // child: _productCard(_featured[index], theme),
                             child: ProductCard(product: _featured[index], theme: theme),
                           ),
                         ),

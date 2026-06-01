@@ -86,7 +86,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     final stock = int.tryParse(widget.product['stock'].toString()) ?? 0;
 
     final screenWidth = MediaQuery.of(context).size.width;
-    final imageSize = screenWidth; // square = full width
+    final imageSize = screenWidth; 
 
     return Scaffold(
       backgroundColor: const Color(0xFF0D0D1A),
@@ -108,7 +108,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       ),
       body: Stack(
         children: [
-          // Background image (fixed, gets covered by scrolling sheet)
           Positioned(
             top: 0,
             left: 0,
@@ -134,16 +133,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
           ),
 
-          // Scrollable content sheet that slides over the image
           SingleChildScrollView(
             controller: _scrollController,
             child: Column(
               children: [
-                // Transparent spacer so content starts below image
-                // Slightly overlapping so rounded corners peek over image
                 SizedBox(height: imageSize - 24),
 
-                // Content sheet
                 Container(
                   width: double.infinity,
                   constraints: BoxConstraints(
@@ -156,7 +151,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Drag indicator
                       Center(
                         child: Container(
                           margin: const EdgeInsets.only(top: 12, bottom: 16),
@@ -174,7 +168,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Price
                             Text(
                               'Rp ${_formatPrice(price)}',
                               style: const TextStyle(
@@ -186,7 +179,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                             const SizedBox(height: 6),
 
-                            // Stock
                             Row(
                               children: [
                                 Icon(
@@ -225,7 +217,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                             const SizedBox(height: 16),
 
-                            // Type · Name
                             RichText(
                               text: TextSpan(
                                 children: [
@@ -251,7 +242,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                             const SizedBox(height: 12),
 
-                            // Description
                             Text(
                               description,
                               style: TextStyle(
@@ -261,7 +251,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                               ),
                             ),
 
-                            const SizedBox(height: 100), // space for bottom bar
+                            const SizedBox(height: 100), 
                           ],
                         ),
                       ),
@@ -274,7 +264,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ],
       ),
 
-      // Bottom bar
       bottomNavigationBar: Container(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
         decoration: const BoxDecoration(
@@ -283,7 +272,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ),
         child: Row(
           children: [
-            // Quantity selector
             Container(
               decoration: BoxDecoration(
                 color: const Color(0xFF0D0D1A),
@@ -321,7 +309,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             const SizedBox(width: 12),
 
-            // Add to cart button
             Expanded(
               child: ElevatedButton.icon(
                 onPressed: stock > 0 && !_addingToCart ? _addToCart : null,
