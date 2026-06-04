@@ -77,8 +77,7 @@ class _ProfilePageState extends State<ProfilePage>
     }
   }
 
-  Color get _roleColor =>
-      _role == 'admin' ? Colors.blueAccent : Colors.cyanAccent;
+  Color get _roleColor => _role == 'admin' ? Colors.blueAccent : Colors.cyanAccent;
 
   String get _roleLabel => _role == 'admin' ? 'Admin' : 'Wanderer';
 

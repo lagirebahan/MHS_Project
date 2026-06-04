@@ -17,7 +17,68 @@ const transporter = nodemailer.createTransport({
 
 router.post('/register', async (req, res) => {
     const {user_name, email, password} = req.body;
-    if(!user_name || !email || !password) return res.status(400).json({message:'400 Bad Request'});
+    if(!user_name || !email || !password) return res.status(400).json({message:'All fields are required'});
+
+    if (user_name.length < 3) {
+        return res.status(400).json({
+            message: 'Username must be at least 3 characters'
+        });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({
+            message: 'Invalid email format'
+        });
+    }
+
+    if (password.length < 8) {
+        return res.status(400).json({
+            message: 'Password must be at least 8 characters'
+        });
+    }
+    
+    let hasLowercase = false;
+    let hasUppercase = false;
+    let hasNumber = false;
+    let hasSpecial = false;
+
+    for (const char of password) {
+        if (char >= 'a' && char <= 'z') {
+            hasLowercase = true;
+        } else if (char >= 'A' && char <= 'Z') {
+            hasUppercase = true;
+        } else if (char >= '0' && char <= '9') {
+            hasNumber = true;
+        } else {
+            hasSpecial = true;
+        }
+    }
+
+    if (!hasLowercase) {
+        return res.status(400).json({
+            message: 'Password must contain at least one lowercase letter'
+        });
+    }
+
+    if (!hasUppercase) {
+        return res.status(400).json({
+            message: 'Password must contain at least one uppercase letter'
+        });
+    }
+
+    if (!hasNumber) {
+        return res.status(400).json({
+            message: 'Password must contain at least one number'
+        });
+    }
+
+    if (!hasSpecial) {
+        return res.status(400).json({
+            message: 'Password must contain at least one special character'
+        });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -68,8 +129,9 @@ router.get('/verify-email', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    console.log('LOGIN ROUTE HIT');
     const {email, password} = req.body;
+    if(!email || !password) return res.status(400).json({message:'Email and password required'});
+
     const sql = "SELECT * FROM users WHERE email = ?";
 
     db.query(sql,[email], async (err, results) => {

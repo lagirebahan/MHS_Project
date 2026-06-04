@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 04, 2026 at 09:20 AM
+-- Generation Time: Jun 04, 2026 at 07:32 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -56,12 +56,10 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`product_id`, `product_name`, `type`, `description`, `stock`, `image`, `price`) VALUES
-(1, 'Test Sword', 'Weapons', 'A sharp blade', 93, '1778566121959.jpg', 30000.00),
-(2, 'test', 'Weapons', 'item', 0, '1778648273274.jpg', 300.00),
-(3, 'upgma', 'Special', 'bio\n\nlogy', 15, '1779217050754.jpg', 333.00),
-(4, 'Lustrous Razor', 'Weapons', 'test image', 20, '1780544798508.jpg', 30.00),
-(5, 'test upload lagi', 'Weapons', 'djddjd', 19, '1780545435872.jpg', 10.00),
-(6, 'test again', 'Weapons', 'test', 30, '1780548766869.jpg', 65648.00);
+(7, 'Galbrena Pistols', 'Weapons', 'Light and Dark dual pistols wielded by the legendary \"Fiend of Ever-burning Flame\", Galbrena', 19, '1780593201383.jpg', 300000.00),
+(8, 'Pearl Leaf', 'Materials', 'A material used for Cooking and Synthesis', 20, '1780593967263.webp', 10000.00),
+(9, 'Pavo Plum', 'Materials', 'A material used for Resonator Ascension', 10, '1780594084184.webp', 30000.00),
+(10, 'Chili Sauce Tofu', 'Consumables', 'A dish of tender tofu served in chili sauce. The appetizing spiciness of it makes Chili Sauce Tofu a widely popular dish even among the nobles of the New Federation.', 100, '1780594232173.webp', 15000.00);
 
 -- --------------------------------------------------------
 
@@ -85,10 +83,7 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`transaction_id`, `user_id`, `recipient_name`, `phone`, `address`, `total_price`, `created_at`, `updated_at`) VALUES
-(1, 3, 'Christian Jordan Dwisaputra', '085163587910', 'akanaja', 121800.00, '2026-05-14 17:44:12', '2026-05-14 17:44:12'),
-(2, 3, 'aa', '34344', 'ajaj', 65865.00, '2026-06-04 00:51:06', '2026-06-04 00:51:06'),
-(3, 16, 'ytgg', '22258', 'dgfgh', 30000.00, '2026-06-04 06:35:29', '2026-06-04 06:35:29'),
-(4, 16, 'ussh', '6865', 'eisu', 10.00, '2026-06-04 06:37:17', '2026-06-04 06:37:17');
+(5, 3, 'ehe', '562', 'sgsh', 300000.00, '2026-06-04 17:31:10', '2026-06-04 17:31:10');
 
 -- --------------------------------------------------------
 
@@ -110,13 +105,7 @@ CREATE TABLE `transaction_items` (
 --
 
 INSERT INTO `transaction_items` (`item_id`, `transaction_id`, `product_id`, `product_name`, `quantity`, `price`) VALUES
-(1, 1, 1, 'Test Sword', 4, 30000.00),
-(2, 1, 2, 'test', 6, 300.00),
-(3, 2, 1, 'Test Sword', 2, 30000.00),
-(4, 2, 2, 'test', 14, 300.00),
-(5, 2, 3, 'upgma', 5, 333.00),
-(6, 3, 1, 'Test Sword', 1, 30000.00),
-(7, 4, 5, 'test upload lagi', 1, 10.00);
+(8, 5, 7, 'Galbrena Pistols', 1, 300000.00);
 
 -- --------------------------------------------------------
 
@@ -195,25 +184,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `transaction_items`
 --
 ALTER TABLE `transaction_items`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `users`

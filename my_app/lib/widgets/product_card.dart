@@ -10,13 +10,12 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final imageUrl = product['image'] ?? '';
     final imageUrl = '${AppConfig.serverBase}/uploads/${product['image']}';
     final name = product['product_name'] ?? '';
     final price = product['price'] ?? 0;
     final type = product['type'] ?? '';
-
-    // print("Image URL: $imageUrl");
+    final stock = int.tryParse(product['stock'].toString()) ?? 0;
+    final isOutOfStock = stock <= 0;
 
     return Container(
       decoration: BoxDecoration(

@@ -49,11 +49,19 @@ router.patch('/:product_id', verifyToken, verifyAdmin, upload.single('image'), (
             if (err) return res.status(500).json({ message: '500 Server Error' });
             if (results.length === 0) return res.status(404).json({ message: '404 Not Found' });
  
-            const oldUrl = results[0].image;
-            if (oldUrl) {
-                const oldFilename = oldUrl.split('/uploads/')[1];
-                const oldPath = path.join(__dirname, '..', 'uploads', oldFilename);
-                if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+            const oldFilename = results[0].image;
+
+            if (oldFilename) {
+                const oldPath = path.join(
+                    __dirname,
+                    '..',
+                    'uploads',
+                    oldFilename
+                );
+
+                if (fs.existsSync(oldPath)) {
+                    fs.unlinkSync(oldPath);
+                }
             }
  
             // const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
@@ -80,15 +88,34 @@ router.delete('/:product_id', verifyToken, verifyAdmin, (req, res) => {
         if (err) return res.status(500).json({ message: '500 Server Error' });
         if (results.length === 0) return res.status(404).json({ message: '404 Not Found' });
  
-        const oldUrl = results[0].image;
-        if (oldUrl) {
-            const oldFilename = oldUrl.split('/uploads/')[1];
-            const oldPath = path.join(__dirname, '..', 'uploads', oldFilename);
-            if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        const oldFilename = results[0].image;
+
+        if (oldFilename) {
+            const oldPath = path.join(
+                __dirname,
+                '..',
+                'uploads',
+                oldFilename
+            );
+
+            if (fs.existsSync(oldPath)) {
+                fs.unlinkSync(oldPath);
+            }
         }
  
         db.query('DELETE FROM products WHERE product_id = ?', [product_id], (err) => {
-            if (err) return res.status(500).json({ message: '500 Server Error' });
+            if (err) {
+                if (err.code === 'ER_ROW_IS_REFERENCED_2') {
+                    return res.status(400).json({
+                        message:
+                            'Cannot delete product because it has transaction history.'
+                    });
+                }
+
+                return res.status(500).json({
+                    message: '500 Server Error'
+                });
+            }
             res.status(200).json({ message: 'Product deleted!' });
         });
     });

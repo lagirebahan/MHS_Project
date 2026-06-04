@@ -323,7 +323,7 @@ class _AdminPageState extends State<AdminPage> {
                                         width: 80,
                                         height: 80,
                                         child: (p['image'] ?? '').isNotEmpty
-                                            ? Image.network(p['image'],
+                                            ? Image.network('${AppConfig.serverBase}/uploads/${p['image']}',
                                                 fit: BoxFit.cover,
                                                 errorBuilder: (_, __, ___) =>
                                                     Container(
@@ -621,7 +621,7 @@ class _ProductFormState extends State<_ProductForm> {
                                       child: Stack(
                                         fit: StackFit.expand,
                                         children: [
-                                          Image.network(existingImage,
+                                          Image.network('${AppConfig.serverBase}/uploads/$existingImage',
                                               fit: BoxFit.cover),
                                           Container(
                                             color:
