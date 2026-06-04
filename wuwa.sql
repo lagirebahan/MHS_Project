@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 01, 2026 at 09:28 AM
+-- Generation Time: Jun 04, 2026 at 09:20 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -35,15 +35,6 @@ CREATE TABLE `orders` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`order_id`, `user_id`, `product_id`, `quantity`, `created_at`) VALUES
-(4, 3, 1, 2, '2026-05-18 14:54:49'),
-(5, 3, 2, 14, '2026-05-18 15:15:34'),
-(6, 3, 3, 5, '2026-05-19 18:58:14');
-
 -- --------------------------------------------------------
 
 --
@@ -65,9 +56,12 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`product_id`, `product_name`, `type`, `description`, `stock`, `image`, `price`) VALUES
-(1, 'Test Sword', 'Weapons', 'A sharp blade', 96, 'http://192.168.1.6:3001/uploads/1778566121959.jpg', 30000.00),
-(2, 'test', 'Weapons', 'item', 14, 'http://192.168.1.6:3001/uploads/1778648273274.jpg', 300.00),
-(3, 'upgma', 'Special', 'bio\n\nlogy', 20, 'http://192.168.1.4:3001/uploads/1779217050754.jpg', 333.00);
+(1, 'Test Sword', 'Weapons', 'A sharp blade', 93, '1778566121959.jpg', 30000.00),
+(2, 'test', 'Weapons', 'item', 0, '1778648273274.jpg', 300.00),
+(3, 'upgma', 'Special', 'bio\n\nlogy', 15, '1779217050754.jpg', 333.00),
+(4, 'Lustrous Razor', 'Weapons', 'test image', 20, '1780544798508.jpg', 30.00),
+(5, 'test upload lagi', 'Weapons', 'djddjd', 19, '1780545435872.jpg', 10.00),
+(6, 'test again', 'Weapons', 'test', 30, '1780548766869.jpg', 65648.00);
 
 -- --------------------------------------------------------
 
@@ -91,7 +85,10 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`transaction_id`, `user_id`, `recipient_name`, `phone`, `address`, `total_price`, `created_at`, `updated_at`) VALUES
-(1, 3, 'Christian Jordan Dwisaputra', '085163587910', 'akanaja', 121800.00, '2026-05-14 17:44:12', '2026-05-14 17:44:12');
+(1, 3, 'Christian Jordan Dwisaputra', '085163587910', 'akanaja', 121800.00, '2026-05-14 17:44:12', '2026-05-14 17:44:12'),
+(2, 3, 'aa', '34344', 'ajaj', 65865.00, '2026-06-04 00:51:06', '2026-06-04 00:51:06'),
+(3, 16, 'ytgg', '22258', 'dgfgh', 30000.00, '2026-06-04 06:35:29', '2026-06-04 06:35:29'),
+(4, 16, 'ussh', '6865', 'eisu', 10.00, '2026-06-04 06:37:17', '2026-06-04 06:37:17');
 
 -- --------------------------------------------------------
 
@@ -114,7 +111,12 @@ CREATE TABLE `transaction_items` (
 
 INSERT INTO `transaction_items` (`item_id`, `transaction_id`, `product_id`, `product_name`, `quantity`, `price`) VALUES
 (1, 1, 1, 'Test Sword', 4, 30000.00),
-(2, 1, 2, 'test', 6, 300.00);
+(2, 1, 2, 'test', 6, 300.00),
+(3, 2, 1, 'Test Sword', 2, 30000.00),
+(4, 2, 2, 'test', 14, 300.00),
+(5, 2, 3, 'upgma', 5, 333.00),
+(6, 3, 1, 'Test Sword', 1, 30000.00),
+(7, 4, 5, 'test upload lagi', 1, 10.00);
 
 -- --------------------------------------------------------
 
@@ -128,7 +130,6 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
   `auth_provider` varchar(40) NOT NULL,
-  `token` varchar(255) NOT NULL,
   `role` varchar(10) DEFAULT 'user',
   `is_verified` tinyint(1) DEFAULT 0,
   `verify_token` varchar(100) DEFAULT NULL
@@ -138,12 +139,13 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `auth_provider`, `token`, `role`, `is_verified`, `verify_token`) VALUES
-(1, '', 'test@test.com', '123', 'local', '2xvg6o5pitszxyjn4lzw6', 'user', 1, NULL),
-(2, 'Test OAuth', 'testOAuth@gmail.com', NULL, 'google', '0wokkzro1mc9h6lgot768c', 'user', 1, NULL),
-(3, 'Christian Jordan', 'cj.lagirebahan@gmail.com', NULL, 'google', 'xgwudz4ya8oscjs8tptpdl', 'admin', 1, NULL),
-(5, 'testregis', 'testregis@test.com', 'testregis', 'local', 'jbmvhyzu4kizos0oua2ulr', 'user', 1, NULL),
-(11, 'Jordan', 'jordandwisaputra06@gmail.com', 'test123', 'local', 'wiezoi719taq7qllkw25y', 'user', 0, '3wq1ydpitf63xnlenwbsdo');
+INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `auth_provider`, `role`, `is_verified`, `verify_token`) VALUES
+(1, '', 'test@test.com', '123', 'local', 'user', 1, NULL),
+(2, 'Test OAuth', 'testOAuth@gmail.com', NULL, 'google', 'user', 1, NULL),
+(3, 'Christian Jordan', 'cj.lagirebahan@gmail.com', NULL, 'google', 'admin', 1, NULL),
+(5, 'testregis', 'testregis@test.com', 'testregis', 'local', 'user', 1, NULL),
+(15, 'testbcrypt', 'jordandwisaputra06@gmail.com', '$2b$10$4gUcLYD0lkJtQkom78HiYutXCwbjgD6KUjJA5RYFoioEFaaRVf8ui', 'local', 'user', 1, NULL),
+(16, 'MARVELL', 'marvelljd99@gmail.com', NULL, 'google', 'admin', 1, NULL);
 
 --
 -- Indexes for dumped tables
@@ -193,31 +195,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `transaction_items`
 --
 ALTER TABLE `transaction_items`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Constraints for dumped tables
