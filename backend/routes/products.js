@@ -28,9 +28,10 @@ router.post('/', verifyToken, verifyAdmin, upload.single('image'), (req, res) =>
     if (!req.file || !product_name || !type || !stock || !price)
         return res.status(400).json({ message: '400 Invalid Input' });
  
-    const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
+    // const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
+    const imagePath = req.file.filename;
     const sql = "INSERT INTO products (product_name, type, description, stock, image, price) VALUES (?, ?, ?, ?, ?, ?)";
-    db.query(sql, [product_name, type, description, stock, imageUrl, price], (err) => {
+    db.query(sql, [product_name, type, description, stock, imagePath, price], (err) => {
         if (err) return res.status(500).json({ message: '500 Server Error' });
         res.status(201).json({ message: '201 Created: Equipment added!' });
     });
@@ -55,9 +56,10 @@ router.patch('/:product_id', verifyToken, verifyAdmin, upload.single('image'), (
                 if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
             }
  
-            const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
+            // const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
+            const imagePath = req.file.filename;
             const sql = "UPDATE products SET product_name=?, type=?, description=?, stock=?, image=?, price=? WHERE product_id=?";
-            db.query(sql, [product_name, type, description, stock, imageUrl, price, product_id], (err) => {
+            db.query(sql, [product_name, type, description, stock, imagePath, price, product_id], (err) => {
                 if (err) return res.status(500).json({ message: '500 Server Error' });
                 res.status(200).json({ message: 'Product updated!' });
             });

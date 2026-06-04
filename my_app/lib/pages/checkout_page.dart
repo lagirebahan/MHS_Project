@@ -316,7 +316,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   Widget _orderItem(dynamic item, bool isLast, AppTheme theme) {
-    final imageUrl = item['image'] ?? '';
+    final imageUrl = '${AppConfig.serverBase}/uploads/${item['image']}';
+    // final imageUrl = item['image'] ?? '';
     final name = item['product_name'] ?? '';
     final price = double.tryParse(item['price'].toString()) ?? 0;
     final qty = item['quantity'] as int;

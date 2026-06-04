@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const bcrypt = require('bcrypt');
 const baseUrl = `http://${process.env.HOST || 'localhost'}:${process.env.PORT || 3001}`;
+const jwt = require('jsonwebtoken')
 
 const nodemailer = require('nodemailer');
 
@@ -13,9 +15,11 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
     const {user_name, email, password} = req.body;
     if(!user_name || !email || !password) return res.status(400).json({message:'400 Bad Request'});
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     db.query('SELECT * FROM users WHERE email =?',[email],(err, results)=>{
         if(err) return res.status(500).json({message:'500 Server Error'});
@@ -27,10 +31,10 @@ router.post('/register', (req, res) => {
             return res.status(400).json({message:'Email already exists.'});
         }
 
-        const token = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
+            // const token = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
         const verifyToken = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
-        const sql = "INSERT INTO users (user_name, email, password, auth_provider, token, is_verified, verify_token) VALUES (?,?,?,'local',?,0,?)";
-        db.query(sql,[user_name, email, password, token, verifyToken], (err) => {
+        const sql = "INSERT INTO users (user_name, email, password, auth_provider, is_verified, verify_token) VALUES (?,?,?,'local',0,?)";
+        db.query(sql,[user_name, email, hashedPassword, verifyToken], (err) => {
             if(err) return res.status(500).json({message: "500 Server Error"});
 
             const verifyUrl = `${baseUrl}/api/verify-email?token=${verifyToken}`;
@@ -64,21 +68,43 @@ router.get('/verify-email', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
+    console.log('LOGIN ROUTE HIT');
     const {email, password} = req.body;
-    const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
-    db.query(sql,[email, password], (err, results) => {
+    const sql = "SELECT * FROM users WHERE email = ?";
+
+    db.query(sql,[email], async (err, results) => {
         if(err) return res.status(500).json({message: "500 Server Error"});
         if (results.length === 0) return res.status(401).json({ message: '401 Unauthorized' });
  
-        if (results[0].is_verified === 0)
+        const user = results[0];
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return res.status(401).json({
+                message: 'Invalid credentials'
+            });
+        }
+
+        const token = jwt.sign(
+            {
+                user_id: user.user_id,
+                role: user.role,
+                email: user.email
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: '7d'
+            }
+        );
+
+        if (user.is_verified === 0)
             return res.status(403).json({ message: 'Please verify your email before signing in.' });
  
         res.status(200).json({
             message: 'Login berhasil!',
-            token: results[0].token,
-            role: results[0].role,
-            user_name: results[0].user_name,
-            email: results[0].email,
+            token,
+            role: user.role,
+            user_name: user.user_name,
+            email: user.email,
         });
     });
 });
@@ -91,20 +117,42 @@ router.post('/google-login', (req, res) => {
         if (err) return res.status(500).json({ message: '500 Server Error' });
  
         if (results.length > 0) {
+            const user = results[0];
+
+            const jwttoken = jwt.sign(
+                {
+                    user_id: user.user_id,
+                    role: user.role,
+                    email: user.email
+                },
+                process.env.JWT_SECRET,
+                {
+                    expiresIn: '7d'
+                }
+            );
             return res.status(200).json({
                 message: 'Login berhasil!',
-                token: results[0].token,
-                role: results[0].role,
-                user_name: results[0].user_name,
-                email: results[0].email,
+                token: jwttoken,
+                role: user.role,
+                user_name: user.user_name,
+                email: user.email,
             });
         }
  
-        const token = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
-        const sql = "INSERT INTO users (user_name, email, auth_provider, token, role, is_verified) VALUES (?, ?, 'google', ?, 'user', 1)";
-        db.query(sql, [name, email, token], (err) => {
+        
+        const sql = "INSERT INTO users (user_name, email, auth_provider, role, is_verified) VALUES (?, ?, 'google', 'user', 1)";
+        db.query(sql, [name, email], (err, result) => {
             if (err) return res.status(500).json({ message: '500 Server Error' });
-            res.status(200).json({ message: 'Login berhasil!', token, role: 'user', user_name: name });
+            const jwttoken = jwt.sign(
+                {
+                    user_id: result.insertId,
+                    role:'user',
+                    email:email
+                }, process.env.JWT_SECRET,{
+                    expiresIn:'7d'
+                }
+            )
+            res.status(200).json({ message: 'Login berhasil!', token: jwttoken, role: 'user', user_name: name , email:email});
         });
     });
 });

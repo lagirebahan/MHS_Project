@@ -78,7 +78,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = widget.product['image'] ?? '';
+    final imageUrl = '${AppConfig.serverBase}/uploads/${widget.product['image']}';
+    // final imageUrl = widget.product['image'] ?? '';
     final name = widget.product['product_name'] ?? '';
     final type = widget.product['type'] ?? '';
     final description = widget.product['description'] ?? 'No description available.';

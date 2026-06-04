@@ -260,7 +260,8 @@ class _CartPageState extends State<CartPage> {
   }
 
   Widget _cartItem(dynamic item, int orderId, int index, AppTheme theme) {
-    final imageUrl = item['image'] ?? '';
+    final imageUrl = '${AppConfig.serverBase}/uploads/${item['image']}';
+    // final imageUrl = item['image'] ?? '';
     final name = item['product_name'] ?? '';
     final price = item['price'] ?? 0;
     final type = item['type'] ?? '';

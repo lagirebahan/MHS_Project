@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/config.dart';
 import 'package:my_app/theme/app_theme.dart';
 
 class ProductCard extends StatelessWidget {
@@ -9,10 +10,13 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = product['image'] ?? '';
+    // final imageUrl = product['image'] ?? '';
+    final imageUrl = '${AppConfig.serverBase}/uploads/${product['image']}';
     final name = product['product_name'] ?? '';
     final price = product['price'] ?? 0;
     final type = product['type'] ?? '';
+
+    // print("Image URL: $imageUrl");
 
     return Container(
       decoration: BoxDecoration(
