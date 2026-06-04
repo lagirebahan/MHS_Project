@@ -47,3 +47,4 @@ app.*.map.json
 my_app/android/app/debug
 my_app/android/app/profile
 my_app/android/app/release
+!my_app/android/app/debug.keystore
